@@ -3,24 +3,41 @@
 namespace App\Models\Blog;
 
 use App\Models\User\Person;
+use App\Models\UUID\UUID;
 
 class Post
 {
-	private int $id;
-	private Person $person;
+	private UUID $id;
 	private string $title;
 	private string $description;
+	private UUID $author_id;
 
-	public function __construct(int $id, string $title, string $description, Person $person)
+
+	public function __construct(UUID $id, string $title, string $description, UUID $author_id)
 	{
 		$this->id = $id;
 		$this->title = $title;
 		$this->description = $description;
-		$this->person = $person;
+		$this->author_id = $author_id;
 	}
 
-	public function __toString()
+	public function getId(): UUID
 	{
-		return $this->title . ' >>> ' . $this->description;
+		return $this->id;
+	}
+
+	public function getTitle(): string
+	{
+		return $this->title;
+	}
+
+	public function getDescription(): string
+	{
+		return $this->description;
+	}
+
+	public function getUserId(): UUID
+	{
+		return $this->author_id;
 	}
 }

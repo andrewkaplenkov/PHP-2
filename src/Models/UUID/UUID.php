@@ -3,6 +3,7 @@
 namespace App\Models\UUID;
 
 use App\Excepetions\InvalidArgumentException;
+use InvalidArgumentException as GlobalInvalidArgumentException;
 
 class UUID
 {
@@ -12,7 +13,7 @@ class UUID
 	{
 
 		if (!uuid_is_valid($id)) {
-			throw new InvalidArgumentException("Malformed UUID: $id");
+			throw new GlobalInvalidArgumentException("Malformed UUID: $id");
 		}
 
 		$this->id = $id;
