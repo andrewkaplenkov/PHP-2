@@ -1,9 +1,9 @@
 <?php
 
 
-namespace App\Repositories\UsersRepository\Utils;
+namespace App\Controllers\User\Utils;
 
-use App\Exceptions\CommandException;
+use App\Exceptions\InvalidArgumentException;
 
 final class Arguments
 {
@@ -11,19 +11,16 @@ final class Arguments
 
 	public function __construct(iterable $arguments)
 	{
-
 		foreach ($arguments as $key => $value) {
 			$stringValue = trim((string)$value);
-
 			if (empty($stringValue)) {
 				continue;
 			}
-
 			$this->arguments[(string)$key] = $stringValue;
 		}
 	}
 
-	public static function parseFromArgv(array $argv): self
+	public static function parseFromArgv(iterable $argv): self
 	{
 		$arguments = [];
 
@@ -38,12 +35,11 @@ final class Arguments
 		return new self($arguments);
 	}
 
-	public function getArgument(string $argument): string
+	public function getArgumentValue(string $key): string
 	{
-		if (!array_key_exists($argument, (array)$this->arguments)) {
-			throw new CommandException("Argument not found: $argument");
+		if (!array_key_exists($key, (array)$this->arguments)) {
+			throw new InvalidArgumentException("Empty value: $key");
 		}
-
-		return $this->arguments[$argument];
+		return $this->arguments[$key];
 	}
 }

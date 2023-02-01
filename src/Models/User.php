@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Models\User;
+namespace App\Models;
 
-use App\Models\UUID\UUID;
-
-class Person
+class User
 {
 	private UUID $id;
 	private string $userName;
@@ -28,12 +26,10 @@ class Person
 	{
 		return $this->userName;
 	}
-
 	public function getFirstName(): string
 	{
 		return $this->firstName;
 	}
-
 	public function getLastName(): string
 	{
 		return $this->lastName;

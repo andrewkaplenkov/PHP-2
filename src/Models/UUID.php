@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Models\UUID;
+namespace App\Models;
 
-use App\Excepetions\InvalidArgumentException;
-use InvalidArgumentException as GlobalInvalidArgumentException;
+use App\Exceptions\InvalidArgumentException;
 
 class UUID
 {
@@ -11,15 +10,15 @@ class UUID
 
 	public function __construct(string $id)
 	{
-
+		$id = trim($id);
 		if (!uuid_is_valid($id)) {
-			throw new GlobalInvalidArgumentException("Malformed UUID: $id");
+			throw new InvalidArgumentException("Invalid UUID format: $id");
 		}
 
 		$this->id = $id;
 	}
 
-	public static function randomUUID(): self
+	public static function random(): self
 	{
 		return new self(uuid_create(UUID_TYPE_RANDOM));
 	}
