@@ -49,20 +49,31 @@ class PostControllerTest extends TestCase
 		));
 	}
 
-	// public function testItFindPostById(): void
-	// {
+	public function testItFindsPostById(): void
+	{
 
-	// 	$connectionStub = $this->createStub(PDO::class);
-	// 	$statementMock = $this->createMock(PDOStatement::class);
+		$connectionStub = $this->createStub(PDO::class);
+		$statementMock = $this->createMock(PDOStatement::class);
 
-	// 	$postController = new PostController($connectionStub);
-	// 	$userController = new UserController($connectionStub);
+		$postController = new PostController($connectionStub);
+		$userController = new UserController($connectionStub);
 
-	// 	$statementMock->method('fetch')->willReturn(PDOStatement::class);
-	// 	$connectionStub->method('prepare')->willReturn($statementMock);
+		$statementMock->method('fetch')->willReturn([
+			'id' => '9b43495f-7f31-4ed5-9b8c-94dbbf9a5ae7',
+			'user_id' => '7068b9ca-506c-4ea3-a6d6-8f8f383a2fb2',
+			'title' => 'TestTitle',
+			'text' => 'TestText',
+			'userName' => 'Ivan',
+			'firstName' => 'Ivan',
+			'lastName' => 'Ivan'
+		]);
 
-	// 	$postController->getPostById(new UUID('9b43495f-7f31-4ed5-9b8c-94dbbf9a5ae7'), $userController);
-	// }
+		$connectionStub->method('prepare')->willReturn($statementMock);
+
+		$post = $postController->getPostById(new UUID('9b43495f-7f31-4ed5-9b8c-94dbbf9a5ae7'), $userController);
+
+		$this->assertSame('9b43495f-7f31-4ed5-9b8c-94dbbf9a5ae7', (string)$post->getId());
+	}
 
 	public function testItThrowsAnExceptionWhenPostNotFound(): void
 	{
