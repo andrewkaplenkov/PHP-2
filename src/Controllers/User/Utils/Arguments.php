@@ -38,7 +38,7 @@ final class Arguments
 	public function getArgumentValue(string $key): string
 	{
 		if (!array_key_exists($key, (array)$this->arguments)) {
-			throw new InvalidArgumentException("Empty value: $key");
+			throw new InvalidArgumentException("Empty value for: $key");
 		}
 		return $this->arguments[$key];
 	}

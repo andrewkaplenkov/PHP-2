@@ -33,7 +33,7 @@ $post = $postController->getPostById(new UUID('9b43495f-7f31-4ed5-9b8c-94dbbf9a5
 $comment = $commentController->getCommentById(new UUID('d74cf51b-f782-4fd1-8f9b-d66114cabb31'), $postController, $userController);
 
 try {
-	// $command->handle(Arguments::parseFromArgv($argv));
+	$command->handle(Arguments::parseFromArgv($argv));
 	// $postController->makePost($post);
 	// $commentController->makeComment($comment);
 } catch (AppException $e) {

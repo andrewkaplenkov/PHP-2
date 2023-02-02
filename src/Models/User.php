@@ -4,17 +4,21 @@ namespace App\Models;
 
 class User
 {
-	private UUID $id;
-	private string $userName;
-	private string $firstName;
-	private string $lastName;
+	// private UUID $id;
+	// private string $userName;
+	// private string $firstName;
+	// private string $lastName;
 
-	public function __construct(UUID $id, string $userName, string $firstName, string $lastName)
-	{
-		$this->id = $id;
-		$this->userName = $userName;
-		$this->firstName = $firstName;
-		$this->lastName = $lastName;
+	public function __construct(
+		private UUID $id,
+		private string $userName,
+		private string $firstName,
+		private string $lastName
+	) {
+		// $this->id = $id;
+		// $this->userName = $userName;
+		// $this->firstName = $firstName;
+		// $this->lastName = $lastName;
 	}
 
 	public function getId(): UUID
