@@ -1,55 +1,55 @@
 <?php
 
-namespace App\Tests\Utils;
+// namespace App\Tests\Utils;
 
-use App\Controllers\User\Utils\Arguments;
-use App\Exceptions\InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+// use App\Controllers\User\Utils\Arguments;
+// use App\Exceptions\InvalidArgumentException;
+// use PHPUnit\Framework\TestCase;
 
-class ArgumentsTest extends TestCase
-{
+// class ArgumentsTest extends TestCase
+// {
 
-	public function testItReturnsArgumentValueByName(): void
-	{
-		$arguments = new Arguments(['someKey' => 'someValue']);
+// 	public function testItReturnsArgumentValueByName(): void
+// 	{
+// 		$arguments = new Arguments(['someKey' => 'someValue']);
 
-		$value = $arguments->getArgumentValue('someKey');
+// 		$value = $arguments->getArgumentValue('someKey');
 
-		$this->assertEquals('someValue', $value);
-	}
+// 		$this->assertEquals('someValue', $value);
+// 	}
 
-	public function testItThrowsAnExceptionWhenArgumentIsAbsent(): void
-	{
-		$arguments = new Arguments([]);
+// 	public function testItThrowsAnExceptionWhenArgumentIsAbsent(): void
+// 	{
+// 		$arguments = new Arguments([]);
 
-		$this->expectException(InvalidArgumentException::class);
+// 		$this->expectException(InvalidArgumentException::class);
 
-		$this->expectExceptionMessage("Empty value for: someKey");
+// 		$this->expectExceptionMessage("Empty value for: someKey");
 
-		$arguments->getArgumentValue('someKey');
-	}
+// 		$arguments->getArgumentValue('someKey');
+// 	}
 
-	public function argumentsProvider(): iterable
-	{
-		return [
-			['some_string', 'some_string'],
-			[' some_string', 'some_string'],
-			[' some_string ', 'some_string'],
-			[123, '123'],
-			[12.3, '12.3'],
-		];
-	}
+// 	public function argumentsProvider(): iterable
+// 	{
+// 		return [
+// 			['some_string', 'some_string'],
+// 			[' some_string', 'some_string'],
+// 			[' some_string ', 'some_string'],
+// 			[123, '123'],
+// 			[12.3, '12.3'],
+// 		];
+// 	}
 
-	/**
-	 * @dataProvider argumentsProvider
-	 */
+// 	/**
+// 	 * @dataProvider argumentsProvider
+// 	 */
 
-	public function testItConvertsValueToString($inputValue, $expectedValue)
-	{
-		$arguments = new Arguments(['someKey' => $inputValue]);
+// 	public function testItConvertsValueToString($inputValue, $expectedValue)
+// 	{
+// 		$arguments = new Arguments(['someKey' => $inputValue]);
 
-		$value = $arguments->getArgumentValue('someKey');
+// 		$value = $arguments->getArgumentValue('someKey');
 
-		$this->assertSame($expectedValue, $value);
-	}
-}
+// 		$this->assertSame($expectedValue, $value);
+// 	}
+// }

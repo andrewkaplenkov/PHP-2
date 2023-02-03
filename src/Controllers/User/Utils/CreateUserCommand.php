@@ -8,40 +8,40 @@ use App\Exceptions\NotFoundException;
 use App\Models\User;
 use App\Models\UUID;
 
-// class CreateUserCommand
-// {
-// 	private UserControllerInterface $userController;
+class CreateUserCommand
+{
+	private UserControllerInterface $userController;
 
-// 	public function __construct(UserControllerInterface $userController)
-// 	{
-// 		$this->userController = $userController;
-// 	}
+	public function __construct(UserControllerInterface $userController)
+	{
+		$this->userController = $userController;
+	}
 
-// 	public function handle(Arguments $arguments): void
-// 	{
-// 		$userName = $arguments->getArgumentValue('userName');
+	public function handle(Arguments $arguments): void
+	{
+		$userName = $arguments->getArgumentValue('userName');
 
-// 		if ($this->userExists($userName)) {
-// 			throw new AlreadyExistsException("User already exists: $userName");
-// 		}
+		if ($this->userExists($userName)) {
+			throw new AlreadyExistsException("User already exists: $userName");
+		}
 
-// 		$this->userController->makeUser(new User(
-// 			UUID::random(),
-// 			$userName,
-// 			$arguments->getArgumentValue('firstName'),
-// 			$arguments->getArgumentValue('lastName')
-// 		));
-// 	}
+		$this->userController->makeUser(new User(
+			UUID::random(),
+			$userName,
+			$arguments->getArgumentValue('firstName'),
+			$arguments->getArgumentValue('lastName')
+		));
+	}
 
-// 	public function userExists(string $userName): bool
-// 	{
-// 		try {
-// 			$this->userController->findByUserName($userName);
-// 		} catch (NotFoundException $e) {
-// 			echo $e->getMessage();
-// 			return false;
-// 		}
+	public function userExists(string $userName): bool
+	{
+		try {
+			$this->userController->findByUserName($userName);
+		} catch (NotFoundException $e) {
+			echo $e->getMessage();
+			return false;
+		}
 
-// 		return true;
-// 	}
-// }
+		return true;
+	}
+}
