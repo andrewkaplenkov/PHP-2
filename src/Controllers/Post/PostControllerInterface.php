@@ -11,5 +11,7 @@ interface PostControllerInterface
 
 	public function makePost(Post $post): void;
 
-	public function getPostById(UUID $id, UserControllerInterface $userController): Post;
+	public function getPostById(UUID $id): Post;
+
+	public function deletePost(UUID $id): void;
 }

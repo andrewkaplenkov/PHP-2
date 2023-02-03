@@ -27,14 +27,14 @@ class CommentController implements CommentControllerInterface
 		);
 
 		$statement->execute([
-			'id' => $comment->getId(),
-			'post_id' => $comment->getPost()->getId(),
-			'user_id' => $comment->getUser()->getId(),
-			'comment' => $comment->getComment()
+			'id' => $comment->id(),
+			'post_id' => $comment->post_id(),
+			'user_id' => $comment->user_id(),
+			'comment' => $comment->comment()
 		]);
 	}
 
-	public function getCommentById(UUID $id, PostControllerInterface $postController, UserControllerInterface $userController)
+	public function getCommentById(UUID $id): Comment
 	{
 		$statement = $this->connection->prepare(
 			'SELECT * FROM comments WHERE id = :id'
@@ -52,9 +52,20 @@ class CommentController implements CommentControllerInterface
 
 		return new Comment(
 			$id,
-			$postController->getPostById(new UUID($result['post_id']), $userController),
-			$userController->findById(new UUID($result['user_id'])),
+			new UUID($result['post_id']),
+			new UUID($result['user_id']),
 			$result['comment']
 		);
+	}
+
+	public function deleteComment(UUID $id): void
+	{
+		$statement = $this->connection->prepare(
+			'DELETE FROM comments WHERE id = :id'
+		);
+
+		$statement->execute([
+			'id' => (string)$id
+		]);
 	}
 }

@@ -12,11 +12,8 @@ use PDOStatement;
 
 class UserController implements UserControllerInterface
 {
-	private PDO $connection;
-
-	public function __construct(PDO $connection)
+	public function __construct(private PDO $connection)
 	{
-		$this->connection = $connection;
 	}
 
 	public function makeUser(User $user): void
@@ -26,10 +23,10 @@ class UserController implements UserControllerInterface
 		);
 
 		$statement->execute([
-			'id' => $user->getId(),
-			'userName' => $user->getUserName(),
-			'firstName' => $user->getFirstName(),
-			'lastName' => $user->getLastName()
+			'id' => $user->id(),
+			'userName' => $user->username(),
+			'firstName' => $user->firstName(),
+			'lastName' => $user->lastName()
 		]);
 	}
 
@@ -73,5 +70,16 @@ class UserController implements UserControllerInterface
 			$result['firstName'],
 			$result['lastName']
 		);
+	}
+
+	public function deleteUser(string $userName): void
+	{
+		$statement = $this->connection->prepare(
+			'DELETE FROM users WHERE userName = :userName'
+		);
+
+		$statement->execute([
+			'userName' => $userName
+		]);
 	}
 }

@@ -6,9 +6,7 @@ use App\Exceptions\InvalidArgumentException;
 
 class UUID
 {
-	private string $id;
-
-	public function __construct(string $id)
+	public function __construct(private string $id)
 	{
 		$id = trim($id);
 		if (!uuid_is_valid($id)) {

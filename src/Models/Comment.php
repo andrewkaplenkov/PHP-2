@@ -4,35 +4,32 @@ namespace App\Models;
 
 class Comment
 {
-	private UUID $id;
-	private Post $post;
-	private User $user;
-	private string $comment;
 
-	public function __construct(UUID $id, Post $post, User $user, string $comment)
-	{
-		$this->id = $id;
-		$this->post = $post;
-		$this->user = $user;
-		$this->comment = $comment;
+
+	public function __construct(
+		private UUID $id,
+		private UUID $post_id,
+		private UUID $user_id,
+		private string $comment
+	) {
 	}
 
-	public function getId(): UUID
+	public function id(): UUID
 	{
 		return $this->id;
 	}
 
-	public function getPost(): Post
+	public function post_id(): UUID
 	{
-		return $this->post;
+		return $this->post_id;
 	}
 
-	public function getUser(): User
+	public function user_id(): UUID
 	{
-		return $this->user;
+		return $this->user_id;
 	}
 
-	public function getComment(): string
+	public function comment(): string
 	{
 		return $this->comment;
 	}

@@ -15,4 +15,6 @@ interface UserControllerInterface
 	public function findByUserName(string $userName): User;
 
 	public function fetchUser(PDOStatement $statement, string $searchQuery): User;
+
+	public function deleteUser(string $userName): void;
 }

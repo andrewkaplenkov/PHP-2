@@ -4,35 +4,30 @@ namespace App\Models;
 
 class Post
 {
-	private UUID $id;
-	private User $user;
-	private string $title;
-	private string $text;
-
-	public function __construct(UUID $id, User $user, string $title, string $text)
-	{
-		$this->id = $id;
-		$this->user = $user;
-		$this->title = $title;
-		$this->text = $text;
+	public function __construct(
+		private UUID $id,
+		private UUID $user_id,
+		private string $title,
+		private string $text
+	) {
 	}
 
-	public function getId(): UUID
+	public function id(): UUID
 	{
 		return $this->id;
 	}
 
-	public function getUser(): User
+	public function user_id(): UUID
 	{
-		return $this->user;
+		return $this->user_id;
 	}
 
-	public function getTitle(): string
+	public function title(): string
 	{
 		return $this->title;
 	}
 
-	public function getText(): string
+	public function text(): string
 	{
 		return $this->text;
 	}

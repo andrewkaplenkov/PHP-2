@@ -2,20 +2,16 @@
 
 namespace App\Controllers\Post;
 
-use App\Controllers\User\UserControllerInterface;
 use App\Exceptions\NotFoundException;
 use App\Models\Post;
 use App\Models\UUID;
 use PDO;
-use Stringable;
 
 class PostController implements PostControllerInterface
 {
-	private PDO $connection;
 
-	public function __construct(PDO $connection)
+	public function __construct(private PDO $connection)
 	{
-		$this->connection = $connection;
 	}
 
 	public function makePost(Post $post): void
@@ -25,14 +21,14 @@ class PostController implements PostControllerInterface
 		);
 
 		$statement->execute([
-			'id' => $post->getId(),
-			'user_id' => $post->getUser()->getId(),
-			'title' => $post->getTitle(),
-			'text' => $post->getText()
+			'id' => $post->id(),
+			'user_id' => $post->user_id(),
+			'title' => $post->title(),
+			'text' => $post->text()
 		]);
 	}
 
-	public function getPostById(UUID $id, UserControllerInterface $userController): Post
+	public function getPostById(UUID $id): Post
 	{
 		$statement = $this->connection->prepare(
 			'SELECT * FROM posts WHERE id = :id'
@@ -50,9 +46,20 @@ class PostController implements PostControllerInterface
 
 		return new Post(
 			$id,
-			$userController->findById(new UUID($result['user_id'])),
+			new UUID($result['user_id']),
 			$result['title'],
 			$result['text']
 		);
+	}
+
+	public function deletePost(UUID $id): void
+	{
+		$statement = $this->connection->prepare(
+			'DELETE FROM posts WHERE id = :id'
+		);
+
+		$statement->execute([
+			'id' => (string)$id
+		]);
 	}
 }
