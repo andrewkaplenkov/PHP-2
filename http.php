@@ -1,13 +1,14 @@
 <?php
 
-use App\Controllers\Comment\CommentController;
-use App\Controllers\Post\PostController;
-use App\Controllers\User\UserController;
+
 use App\Exceptions\AppException;
 use App\Exceptions\HTTPException;
 use App\HTTP\Actions\Comment\CreateNewComment;
 use App\HTTP\Actions\Comment\DeleteComment;
 use App\HTTP\Actions\Comment\FindCommentById;
+use App\HTTP\Actions\Like\DeleteLike;
+use App\HTTP\Actions\Like\GetLikes;
+use App\HTTP\Actions\Like\SaveLike;
 use App\HTTP\Actions\Post\CreateNewPost;
 use App\HTTP\Actions\Post\DeletePost;
 use App\HTTP\Actions\Post\FindPostById;
@@ -15,34 +16,16 @@ use App\HTTP\Actions\User\CreateNewUser;
 use App\HTTP\Actions\User\DeleteUser;
 use App\HTTP\Actions\User\FindByUsername;
 use App\HTTP\Request\Request;
-use App\HTTP\Response\SuccessfullResponse;
+
 use App\HTTP\Response\UnsuccessfullResponse;
 
-require_once __DIR__ . '/vendor/autoload.php';
+$container = require_once __DIR__ . '/container.php';
 
-$connection = new PDO("sqlite:blog.db", null, null, [
-	PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-]);
-
-$request = new Request($_GET, $_SERVER, file_get_contents('php://input'));
-
-$routes = [
-	'GET' => [
-		'/users/show' => new FindByUsername(new UserController($connection)),
-		'/posts/show' => new FindPostById(new PostController($connection)),
-		'/comments/show' => new FindCommentById(new CommentController($connection))
-	],
-	'POST' => [
-		'/users/new' => new CreateNewUser(new UserController($connection)),
-		'/posts/new' => new CreateNewPost(new PostController($connection)),
-		'/comments/new' => new CreateNewComment(new CommentController($connection))
-	],
-	'DELETE' => [
-		'/users/delete' => new DeleteUser(new UserController($connection)),
-		'/posts/delete' => new DeletePost(new PostController($connection)),
-		'/comments/delete' => new DeleteComment(new CommentController($connection))
-	]
-];
+$request = new Request(
+	$_GET,
+	$_SERVER,
+	file_get_contents('php://input')
+);
 
 try {
 	$path = $request->path();
@@ -50,6 +33,27 @@ try {
 } catch (HTTPException $e) {
 	(new UnsuccessfullResponse($e->getMessage()))->send();
 }
+
+$routes = [
+	'GET' => [
+		'/users/show' => FindByUsername::class,
+		'/posts/show' => FindPostById::class,
+		'/comments/show' => FindCommentById::class,
+		'/likes/show' => GetLikes::class
+	],
+	'POST' => [
+		'/users/new' => CreateNewUser::class,
+		'/posts/new' => CreateNewPost::class,
+		'/comments/new' => CreateNewComment::class,
+		'/likes/new' => SaveLike::class
+	],
+	'DELETE' => [
+		'/users/delete' => DeleteUser::class,
+		'/posts/delete' => DeletePost::class,
+		'/comments/delete' => DeleteComment::class,
+		'/likes/delete' => DeleteLike::class
+	]
+];
 
 if (!array_key_exists($method, $routes)) {
 	(new UnsuccessfullResponse("Method Error"))->send();
@@ -61,7 +65,9 @@ if (!array_key_exists($path, $routes[$method])) {
 	return;
 }
 
-$action = $routes[$method][$path];
+$actionClassname = $routes[$method][$path];
+
+$action = $container->get($actionClassname);
 
 try {
 	$response = $action->handle($request);
