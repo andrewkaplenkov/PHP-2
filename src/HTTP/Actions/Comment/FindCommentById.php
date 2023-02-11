@@ -11,11 +11,13 @@ use App\HTTP\Response\Response;
 use App\HTTP\Response\SuccessfullResponse;
 use App\HTTP\Response\UnsuccessfullResponse;
 use App\Models\UUID;
+use Psr\Log\LoggerInterface;
 
 class FindCommentById implements ActionInterface
 {
 	public function __construct(
-		private CommentControllerInterface $commentController
+		private CommentControllerInterface $commentController,
+		private LoggerInterface $logger
 	) {
 	}
 
@@ -30,6 +32,7 @@ class FindCommentById implements ActionInterface
 		try {
 			$comment = $this->commentController->getCommentById(new UUID($id));
 		} catch (NotFoundException $e) {
+			$this->logger->warning('Comment not found: ' . $id);
 			return new UnsuccessfullResponse($e->getMessage());
 		}
 

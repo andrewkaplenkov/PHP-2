@@ -11,11 +11,13 @@ use App\HTTP\Response\Response;
 use App\HTTP\Response\SuccessfullResponse;
 use App\HTTP\Response\UnsuccessfullResponse;
 use App\Models\UUID;
+use Psr\Log\LoggerInterface;
 
 class DeleteUser implements ActionInterface
 {
 	public function __construct(
-		private UserControllerInterface $userController
+		private UserControllerInterface $userController,
+		private LoggerInterface $logger
 	) {
 	}
 
@@ -29,6 +31,7 @@ class DeleteUser implements ActionInterface
 
 		try {
 			$this->userController->deleteUser($username);
+			$this->logger->info("User deleted " . $username);
 		} catch (NotFoundException $e) {
 			return new UnsuccessfullResponse($e->getMessage());
 		}

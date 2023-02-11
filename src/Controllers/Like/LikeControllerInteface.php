@@ -8,8 +8,9 @@ use PDOStatement;
 
 interface LikeControllerInteface
 {
+	public function checkIfExists(UUID $post_id, UUID $user_id): void;
 
-	public function save(UUID $post_id, UUID $user_id): void;
+	public function save(Like $like): void;
 
 	public function getByPostId(UUID $post_id): array;
 

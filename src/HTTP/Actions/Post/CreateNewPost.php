@@ -5,26 +5,33 @@ namespace App\HTTP\Actions\Post;
 use App\HTTP\Actions\ActionInterface;
 use App\Controllers\Post\PostControllerInterface;
 use App\Exceptions\HTTPException;
+use App\HTTP\Auth\AuthInterface;
 use App\HTTP\Request\Request;
 use App\HTTP\Response\Response;
 use App\HTTP\Response\SuccessfullResponse;
 use App\HTTP\Response\UnsuccessfullResponse;
 use App\Models\Post;
 use App\Models\UUID;
+use Psr\Log\LoggerInterface;
 
 class CreateNewPost implements ActionInterface
 {
 	public function __construct(
-		private PostControllerInterface $postController
+		private PostControllerInterface $postController,
+		private AuthInterface $indentification,
+		private LoggerInterface $logger
 	) {
 	}
 
 	public function handle(Request $request): Response
 	{
+
+		$user = $this->indentification->user($request);
+
 		try {
 			$post = new Post(
 				UUID::random(),
-				new UUID($request->JsonBodyField('user_id')),
+				$user->id(),
 				$request->JsonBodyField('title'),
 				$request->JsonBodyField('text'),
 			);
@@ -34,6 +41,7 @@ class CreateNewPost implements ActionInterface
 
 		try {
 			$this->postController->makePost($post);
+			$this->logger->info("Post created " . $post->id());
 			return new SuccessfullResponse([
 				'id' => (string)$post->id(),
 				'status' => 'created'

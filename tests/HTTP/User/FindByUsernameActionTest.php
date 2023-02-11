@@ -18,7 +18,6 @@ class FindByUsernameActionTest extends TestCase
 
 	private function usersRepository(array $users): UserControllerInterface
 	{
-		// В конструктор анонимного класса передаём массив пользователей
 		return new class($users) implements UserControllerInterface
 		{
 			public function __construct(
@@ -120,7 +119,7 @@ class FindByUsernameActionTest extends TestCase
 
 	// 	$this->assertInstanceOf(SuccessfulResponse::class, $response);
 
-	// 	$this->expectOutputString('{"success":true,"data":{"username":"ivan","firstname":"ivan","lastname":"ivan"}}');
+	// 	// $this->expectOutputString('{"success":true,"data":{"username":"ivan","firstname":"ivan","lastname":"ivan"}}');
 	// 	$response->send();
 	// }
 }

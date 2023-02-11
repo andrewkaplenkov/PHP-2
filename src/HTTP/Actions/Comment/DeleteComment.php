@@ -11,11 +11,13 @@ use App\HTTP\Response\Response;
 use App\HTTP\Response\SuccessfullResponse;
 use App\HTTP\Response\UnsuccessfullResponse;
 use App\Models\UUID;
+use Psr\Log\LoggerInterface;
 
 class DeleteComment implements ActionInterface
 {
 	public function __construct(
-		private CommentControllerInterface $commentController
+		private CommentControllerInterface $commentController,
+		private LoggerInterface $logger
 	) {
 	}
 
@@ -29,6 +31,7 @@ class DeleteComment implements ActionInterface
 
 		try {
 			$this->commentController->deleteComment(new UUID($id));
+			$this->logger->info("Comment deleted " . $id);
 		} catch (NotFoundException $e) {
 			return new UnsuccessfullResponse($e->getMessage());
 		}

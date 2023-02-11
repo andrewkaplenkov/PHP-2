@@ -11,11 +11,14 @@ use App\HTTP\Response\SuccessfullResponse;
 use App\HTTP\Response\UnsuccessfullResponse;
 use App\Models\User;
 use App\Models\UUID;
+use Exception;
+use Psr\Log\LoggerInterface;
 
 class CreateNewUser implements ActionInterface
 {
 	public function __construct(
-		private UserControllerInterface $userController
+		private UserControllerInterface $userController,
+		private LoggerInterface $logger
 	) {
 	}
 
@@ -34,12 +37,14 @@ class CreateNewUser implements ActionInterface
 
 		try {
 			$this->userController->makeUser($user);
+			$this->logger->info("User created " . $user->username());
 			return new SuccessfullResponse([
 				'id' => (string)$user->id(),
 				'username' => $user->username(),
 				'status' => 'created'
 			]);
-		} catch (HTTPException $e) {
+		} catch (Exception $e) {
+			$this->logger->error("User alrady exists " . $user->username());
 			return new UnsuccessfullResponse("User not created!");
 		}
 	}

@@ -18,6 +18,7 @@ use App\HTTP\Actions\User\FindByUsername;
 use App\HTTP\Request\Request;
 
 use App\HTTP\Response\UnsuccessfullResponse;
+use Psr\Log\LoggerInterface;
 
 $container = require_once __DIR__ . '/container.php';
 
@@ -27,10 +28,13 @@ $request = new Request(
 	file_get_contents('php://input')
 );
 
+$logger = $container->get(LoggerInterface::class);
+
 try {
 	$path = $request->path();
 	$method = $request->method();
 } catch (HTTPException $e) {
+	$logger->warning("Cannot resolve path or method" . $e->getMessage());
 	(new UnsuccessfullResponse($e->getMessage()))->send();
 }
 
@@ -55,13 +59,9 @@ $routes = [
 	]
 ];
 
-if (!array_key_exists($method, $routes)) {
-	(new UnsuccessfullResponse("Method Error"))->send();
-	return;
-}
-
-if (!array_key_exists($path, $routes[$method])) {
-	(new UnsuccessfullResponse("Path not found"))->send();
+if (!array_key_exists($method, $routes) || !array_key_exists($path, $routes[$method])) {
+	$logger->notice("Route not found");
+	(new UnsuccessfullResponse("Route Error"))->send();
 	return;
 }
 
@@ -72,6 +72,7 @@ $action = $container->get($actionClassname);
 try {
 	$response = $action->handle($request);
 } catch (AppException $e) {
+	$logger->error($e->getMessage());
 	(new UnsuccessfullResponse($e->getMessage()))->send();
 }
 

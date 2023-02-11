@@ -6,6 +6,7 @@ use App\Exceptions\AlreadyExistsException;
 use App\Models\Like;
 use App\Models\UUID;
 use PDO;
+use PDOStatement;
 
 class LikeController implements LikeControllerInteface
 {
@@ -14,7 +15,7 @@ class LikeController implements LikeControllerInteface
 	) {
 	}
 
-	public function save(UUID $post_id, UUID $user_id): void
+	public function checkIfExists(UUID $post_id, UUID $user_id): void
 	{
 		$statement = $this->connection->prepare(
 			'SELECT * FROM likes WHERE post_id = :post_id AND user_id = :user_id'
@@ -25,17 +26,15 @@ class LikeController implements LikeControllerInteface
 			'user_id' => (string)$user_id
 		]);
 
-		$result = $statement->fetch();
+		$result = $statement->fetchAll();
 
-		if ($result !== false) {
+		if ($result) {
 			throw new AlreadyExistsException("Liked already");
 		}
+	}
 
-		$like = new Like(
-			UUID::random(),
-			new UUID($post_id),
-			new UUID($user_id),
-		);
+	public function save(Like $like): void
+	{
 
 		$statement = $this->connection->prepare(
 			'INSERT INTO likes(id, post_id, user_id) VALUES (:id, :post_id, :user_id)'

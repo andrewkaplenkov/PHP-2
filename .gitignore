@@ -2,3 +2,5 @@
 /coverage_report
 /.vscode
 .gitignore
+/logs
+.env

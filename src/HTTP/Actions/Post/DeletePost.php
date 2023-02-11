@@ -11,11 +11,13 @@ use App\HTTP\Response\Response;
 use App\HTTP\Response\SuccessfullResponse;
 use App\HTTP\Response\UnsuccessfullResponse;
 use App\Models\UUID;
+use Psr\Log\LoggerInterface;
 
 class DeletePost implements ActionInterface
 {
 	public function __construct(
-		private PostControllerInterface $postController
+		private PostControllerInterface $postController,
+		private LoggerInterface $logger
 	) {
 	}
 
@@ -29,6 +31,7 @@ class DeletePost implements ActionInterface
 
 		try {
 			$this->postController->deletePost(new UUID($id));
+			$this->logger->info("Post deleted " . $id);
 		} catch (NotFoundException $e) {
 			return new UnsuccessfullResponse($e->getMessage());
 		}

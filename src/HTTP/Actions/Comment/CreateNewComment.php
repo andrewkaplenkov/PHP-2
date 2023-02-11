@@ -11,11 +11,13 @@ use App\HTTP\Response\SuccessfullResponse;
 use App\HTTP\Response\UnsuccessfullResponse;
 use App\Models\Comment;
 use App\Models\UUID;
+use Psr\Log\LoggerInterface;
 
 class CreateNewComment implements ActionInterface
 {
 	public function __construct(
-		private CommentControllerInterface $commentController
+		private CommentControllerInterface $commentController,
+		private LoggerInterface $logger
 	) {
 	}
 
@@ -34,12 +36,13 @@ class CreateNewComment implements ActionInterface
 
 		try {
 			$this->commentController->makeComment($comment);
+			$this->logger->info("Comment created " . $comment->id());
 			return new SuccessfullResponse([
 				'id' => (string)$comment->id(),
 				'status' => 'created'
 			]);
 		} catch (HTTPException) {
-			return new UnsuccessfullResponse("Post not created!");
+			return new UnsuccessfullResponse("Comment not created!");
 		}
 	}
 }
