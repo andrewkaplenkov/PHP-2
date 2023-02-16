@@ -24,12 +24,21 @@ class CreateNewUser implements ActionInterface
 
 	public function handle(Request $request): Response
 	{
+
+		// try {
+		// 	$password = $request->JsonBodyField('password');
+		// } catch (Exception $e) {
+		// 	throw new Exception($e->getMessage());
+		// }
+
+		// $hash = hash('sha256',$password);
+
 		try {
-			$user = new User(
-				UUID::random(),
+			$user = User::createFrom(
 				$request->JsonBodyField('username'),
 				$request->JsonBodyField('firstname'),
-				$request->JsonBodyField('lastname')
+				$request->JsonBodyField('lastname'),
+				$request->JsonBodyField('password')
 			);
 		} catch (HTTPException $e) {
 			return new UnsuccessfullResponse($e->getMessage());

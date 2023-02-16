@@ -1,6 +1,8 @@
 <?php
 
 use App\Container\DIContainer;
+use App\Controllers\Auth\AuthController;
+use App\Controllers\Auth\AuthControllerInterface;
 use App\Controllers\Comment\CommentController;
 use App\Controllers\Comment\CommentControllerInterface;
 use App\Controllers\Like\LikeController;
@@ -10,7 +12,11 @@ use App\Controllers\Post\PostControllerInterface;
 use App\Controllers\User\UserController;
 use App\Controllers\User\UserControllerInterface;
 use App\HTTP\Auth\AuthInterface;
-use App\HTTP\Auth\JsonBodyIDIdentification;
+use App\HTTP\Auth\BearerTokenAuth;
+use App\HTTP\Auth\PasswordAuthInterface;
+use App\HTTP\Auth\PasswordIdentification;
+use App\HTTP\Auth\TokenAuthInteface;
+use App\HTTP\Auth\TokenAuthInterface;
 use Dotenv\Dotenv;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -52,8 +58,18 @@ $container->bind(
 );
 
 $container->bind(
-	AuthInterface::class,
-	JsonBodyIDIdentification::class
+	PasswordAuthInterface::class,
+	PasswordIdentification::class
+);
+
+$container->bind(
+	TokenAuthInterface::class,
+	BearerTokenAuth::class
+);
+
+$container->bind(
+	AuthControllerInterface::class,
+	AuthController::class
 );
 
 $container->bind(
