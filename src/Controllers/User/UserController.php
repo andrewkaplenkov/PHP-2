@@ -19,14 +19,16 @@ class UserController implements UserControllerInterface
 	public function makeUser(User $user): void
 	{
 		$statement = $this->connection->prepare(
-			'INSERT INTO users (id, userName, firstName, lastName) VALUES (:id, :userName, :firstName, :lastName)'
+			'INSERT INTO users (id, userName, firstName, lastName, password) 
+			VALUES (:id, :userName, :firstName, :lastName, :password)'
 		);
 
 		$statement->execute([
 			'id' => $user->id(),
 			'userName' => $user->username(),
 			'firstName' => $user->firstName(),
-			'lastName' => $user->lastName()
+			'lastName' => $user->lastName(),
+			'password' => $user->passwordHash()
 		]);
 	}
 
@@ -68,7 +70,8 @@ class UserController implements UserControllerInterface
 			new UUID($result['id']),
 			$result['userName'],
 			$result['firstName'],
-			$result['lastName']
+			$result['lastName'],
+			$result['password']
 		);
 	}
 

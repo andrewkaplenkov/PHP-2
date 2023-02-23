@@ -15,6 +15,8 @@ use App\HTTP\Actions\Post\FindPostById;
 use App\HTTP\Actions\User\CreateNewUser;
 use App\HTTP\Actions\User\DeleteUser;
 use App\HTTP\Actions\User\FindByUsername;
+use App\HTTP\Auth\Login;
+use App\HTTP\Auth\Logout;
 use App\HTTP\Request\Request;
 
 use App\HTTP\Response\UnsuccessfullResponse;
@@ -49,7 +51,9 @@ $routes = [
 		'/users/new' => CreateNewUser::class,
 		'/posts/new' => CreateNewPost::class,
 		'/comments/new' => CreateNewComment::class,
-		'/likes/new' => SaveLike::class
+		'/likes/new' => SaveLike::class,
+		'/login' => Login::class,
+		'/logout' => Logout::class
 	],
 	'DELETE' => [
 		'/users/delete' => DeleteUser::class,

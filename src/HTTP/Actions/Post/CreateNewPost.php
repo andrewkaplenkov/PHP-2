@@ -5,28 +5,33 @@ namespace App\HTTP\Actions\Post;
 use App\HTTP\Actions\ActionInterface;
 use App\Controllers\Post\PostControllerInterface;
 use App\Exceptions\HTTPException;
-use App\HTTP\Auth\AuthInterface;
+use App\HTTP\Auth\TokenAuthInterface;
 use App\HTTP\Request\Request;
 use App\HTTP\Response\Response;
 use App\HTTP\Response\SuccessfullResponse;
 use App\HTTP\Response\UnsuccessfullResponse;
 use App\Models\Post;
 use App\Models\UUID;
+use Exception;
 use Psr\Log\LoggerInterface;
 
 class CreateNewPost implements ActionInterface
 {
 	public function __construct(
 		private PostControllerInterface $postController,
-		private AuthInterface $indentification,
+		private TokenAuthInterface $indentification,
 		private LoggerInterface $logger
 	) {
 	}
 
 	public function handle(Request $request): Response
 	{
+		try {
+			$user = $this->indentification->user($request);
+		} catch (Exception $e) {
+			throw new Exception($e->getMessage());
+		}
 
-		$user = $this->indentification->user($request);
 
 		try {
 			$post = new Post(

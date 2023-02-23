@@ -8,7 +8,8 @@ class User
 		private UUID $id,
 		private string $userName,
 		private string $firstName,
-		private string $lastName
+		private string $lastName,
+		private string $passwordHash
 	) {
 	}
 
@@ -28,5 +29,33 @@ class User
 	public function lastName(): string
 	{
 		return $this->lastName;
+	}
+
+	public function passwordHash(): string {
+		return $this->passwordHash;
+	}
+
+	private static function hash(string $password, UUID $id): string {
+		return hash('sha256', $password . $id);
+	}
+
+	public function passwordCheck(string $password): bool {
+		return $this->passwordHash === self::hash($password, $this->id);
+	}
+
+	public static function createFrom(
+		string $username,
+		string $firstName,
+		string $lastName,
+		string $password,
+	): self
+	{
+		return new self(
+			$id = UUID::random(),
+			$username,
+			$firstName,
+			$lastName,
+			self::hash($password, $id)
+		);
 	}
 }
