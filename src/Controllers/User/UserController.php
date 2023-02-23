@@ -20,7 +20,9 @@ class UserController implements UserControllerInterface
 	{
 		$statement = $this->connection->prepare(
 			'INSERT INTO users (id, userName, firstName, lastName, password) 
-			VALUES (:id, :userName, :firstName, :lastName, :password)'
+			VALUES (:id, :userName, :firstName, :lastName, :password)
+			ON CONFLICT (id) DO UPDATE SET
+			firstName = :firstName, lastName = :lastName'
 		);
 
 		$statement->execute([
